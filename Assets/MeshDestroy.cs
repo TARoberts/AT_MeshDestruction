@@ -12,6 +12,7 @@ public class MeshDestroy : MonoBehaviour
 
     public int CutCascades = 1;
     public float ExplodeForce = 0;
+    public int MaxDestroyLevel = 3;
 
     // Start is called before the first frame update
     void Start()
@@ -271,6 +272,7 @@ public class MeshDestroy : MonoBehaviour
             GameObject.transform.position = original.transform.position;
             GameObject.transform.rotation = original.transform.rotation;
             GameObject.transform.localScale = original.transform.localScale;
+            GameObject.AddComponent<CullTiny>();
 
             var mesh = new Mesh();
             mesh.name = original.GetComponent<MeshFilter>().mesh.name;
@@ -278,10 +280,10 @@ public class MeshDestroy : MonoBehaviour
             mesh.vertices = Vertices;
             mesh.normals = Normals;
             mesh.uv = UV;
-            for(var i = 0; i < Triangles.Length; i++)
+            for (var i = 0; i < Triangles.Length; i++)
                 mesh.SetTriangles(Triangles[i], i, true);
             Bounds = mesh.bounds;
-            
+
             var renderer = GameObject.AddComponent<MeshRenderer>();
             renderer.materials = original.GetComponent<MeshRenderer>().materials;
 
@@ -295,6 +297,13 @@ public class MeshDestroy : MonoBehaviour
             var meshDestroy = GameObject.AddComponent<MeshDestroy>();
             meshDestroy.CutCascades = original.CutCascades;
             meshDestroy.ExplodeForce = original.ExplodeForce;
+            meshDestroy.MaxDestroyLevel = original.MaxDestroyLevel - 1;
+
+            //if (original.MaxDestroyLevel <= 0)
+            //{
+            //    meshDestroy.enabled = false;
+            //    Destroy(GameObject, UnityEngine.Random.Range(5, 20));
+            //}
 
         }
 

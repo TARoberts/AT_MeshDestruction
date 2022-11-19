@@ -11,7 +11,7 @@ public class MeshDestroy : MonoBehaviour
     private Plane edgePlane = new Plane();
 
     public int CutCascades = 1;
-    public float ExplodeForce = 0;
+    public float ExplodeForce = 1000;
     public int MaxDestroyLevel = 3;
 
     // Start is called before the first frame update

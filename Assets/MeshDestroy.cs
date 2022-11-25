@@ -9,15 +9,19 @@ public class MeshDestroy : MonoBehaviour
     private Vector3 edgeVertex = Vector3.zero;
     private Vector2 edgeUV = Vector2.zero;
     private Plane edgePlane = new Plane();
+    private Vector3 pos1, pos2;
 
     public int CutCascades = 1;
     public float ExplodeForce = 1000;
     public int MaxDestroyLevel = 3;
+    private Camera cam;
+    private Plane testPlane;
+    private string lastHit;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        cam = Camera.main;
     }
 
     // Update is called once per frame
@@ -25,13 +29,36 @@ public class MeshDestroy : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            DestroyMesh();
+            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+            pos1 = Input.mousePosition;
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit))
+            {
+                if (hit.collider.name == this.GetComponent<Collider>().name)
+                {
+                    Debug.Log(hit.collider.name);
+                    lastHit = hit.collider.name;
+                }
+            }
+            
+        }
+        if (Input.GetMouseButtonUp(0))
+        {
+            Debug.Log(lastHit);
+            pos2 = Input.mousePosition;
+
+            float fuck = Vector3.Distance(pos1, pos2);
+            //testPlane = new Plane(pos1, fuck);
+            if (lastHit == GetComponent<Collider>().name)
+            {
+                DestroyMesh();
+            }
         }
     }
 
     private void DestroyMesh()
     {
-        var originalMesh = GetComponent<MeshFilter>().mesh;
+        Mesh originalMesh = this.gameObject.GetComponent<MeshFilter>().mesh;
         originalMesh.RecalculateBounds();
         var parts = new List<PartMesh>();
         var subParts = new List<PartMesh>();
@@ -56,8 +83,14 @@ public class MeshDestroy : MonoBehaviour
                 var bounds = parts[i].Bounds;
                 bounds.Expand(0.5f);
 
-                var plane = new Plane(UnityEngine.Random.onUnitSphere, new Vector3(0,0,0));
 
+                //var plane = new Plane(Input.mousePosition, new Vector3(UnityEngine.Random.Range(bounds.min.x, bounds.max.x),
+                //                                                                   UnityEngine.Random.Range(bounds.min.y, bounds.max.y),
+                //                                                                   UnityEngine.Random.Range(bounds.min.z, bounds.max.z)));
+
+                float fuck = Vector3.Distance(pos1, pos2);
+
+                var plane = new Plane(Input.mousePosition, fuck);
 
                 subParts.Add(GenerateMesh(parts[i], plane, true));
                 subParts.Add(GenerateMesh(parts[i], plane, false));
@@ -266,7 +299,8 @@ public class MeshDestroy : MonoBehaviour
 
         public void MakeGameobject(MeshDestroy original)
         {
-            GameObject = new GameObject(original.name);
+            int nameRand = UnityEngine.Random.Range(0, 10);
+            GameObject = new GameObject(original.name + " " + nameRand);
             GameObject.transform.position = original.transform.position;
             GameObject.transform.rotation = original.transform.rotation;
             GameObject.transform.localScale = original.transform.localScale;

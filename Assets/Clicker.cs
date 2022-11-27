@@ -6,7 +6,6 @@ public class Clicker : MonoBehaviour
 {
     Vector3 pos1, pos2;
     private Plane planee;
-    bool click = false;
 
     // Update is called once per frame
     void Update()

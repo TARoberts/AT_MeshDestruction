@@ -141,9 +141,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca7dbd6d5d4a1fd409ac1a1e12b06352, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CutCascades: 2
+  CutCascades: 1
   ExplodeForce: 1000
-  MaxDestroyLevel: 5
 --- !u!114 &50297979
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -191,7 +190,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CutCascades: 1
   ExplodeForce: 1000
-  MaxDestroyLevel: 3
 --- !u!114 &161361024
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -359,14 +357,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
-  m_LocalRotation: {x: 0.17931125, y: -0.016237365, z: 0.0029537606, w: 0.983654}
+  m_LocalRotation: {x: 0.17364816, y: 0, z: 0, w: 0.9848078}
   m_LocalPosition: {x: 0.24581498, y: 4.04621, z: -9.215556}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 20, y: 0, z: 0}
 --- !u!114 &330585547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -717,7 +715,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CutCascades: 1
   ExplodeForce: 1000
-  MaxDestroyLevel: 3
 --- !u!114 &604350568
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -965,7 +962,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CutCascades: 1
   ExplodeForce: 1000
-  MaxDestroyLevel: 3
 --- !u!114 &898389374
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1064,7 +1060,7 @@ PrefabInstance:
     - target: {fileID: 3016434685063089462, guid: 750cf4f7cdd0442dab66850effb8f875,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
@@ -1178,9 +1174,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca7dbd6d5d4a1fd409ac1a1e12b06352, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CutCascades: 5
+  CutCascades: 1
   ExplodeForce: 1000
-  MaxDestroyLevel: 3
 --- !u!114 &1801538045
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1213,7 +1208,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2094648596
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1228,7 +1223,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CutCascades: 1
   ExplodeForce: 1000
-  MaxDestroyLevel: 1
 --- !u!114 &2094648597
 MonoBehaviour:
   m_ObjectHideFlags: 0

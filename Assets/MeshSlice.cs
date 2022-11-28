@@ -85,15 +85,25 @@ public class MeshSlice : MonoBehaviour
                 bounds.Expand(0.5f);
 
 
-                //var plane = new Plane(Input.mousePosition, new Vector3(UnityEngine.Random.Range(bounds.min.x, bounds.max.x),
+                //Plane plane = new Plane(UnityEngine.Random.onUnitSphere, new Vector3(UnityEngine.Random.Range(bounds.min.x, bounds.max.x),
                 //                                                                   UnityEngine.Random.Range(bounds.min.y, bounds.max.y),
                 //                                                                   UnityEngine.Random.Range(bounds.min.z, bounds.max.z)));
 
                 //float fuck = Vector3.Distance(pos1, pos2);
 
-                Plane plane = new Plane(pos1, new Vector3(UnityEngine.Random.Range(bounds.min.x, bounds.max.x),
-                                                                                   UnityEngine.Random.Range(bounds.min.y, bounds.max.y),
-                                                                                   UnityEngine.Random.Range(bounds.min.z, bounds.max.z)));
+                //Plane plane = new Plane(pos1, new Vector3(UnityEngine.Random.Range(bounds.min.x, bounds.max.x),
+                //                                                                   UnityEngine.Random.Range(bounds.min.y, bounds.max.y),
+                //                                                                   UnityEngine.Random.Range(bounds.min.z, bounds.max.z)));
+
+                //pos2 = pos1 + bounds.max;
+
+                //pos1.Normalize();
+
+                //Debug.Log(pos1);
+                //Debug.Log(pos2);
+                //Plane plane = new Plane(pos1, pos2);
+
+                Plane plane = new Plane(UnityEngine.Random.onUnitSphere, pos1);
 
                 subParts.Add(GenerateMesh(parts[i], plane, true));
                 subParts.Add(GenerateMesh(parts[i], plane, false));
@@ -323,12 +333,19 @@ public class MeshSlice : MonoBehaviour
             filter.mesh = mesh;
 
             MeshCollider collider = OriginalModel.AddComponent<MeshCollider>();
-            collider.convex = true;
 
             Rigidbody rigidbody = OriginalModel.AddComponent<Rigidbody>();
             MeshSlice meshSlice = OriginalModel.AddComponent<MeshSlice>();
             meshSlice.CutCascades = original.CutCascades;
             meshSlice.ExplodeForce = original.ExplodeForce;
+
+            //float size = collider.bounds.size.x + collider.bounds.size.y + collider.bounds.size.z;
+            //if (size < 1)
+            //{
+            //    Debug.Log("Culling Object of size " + size);
+            //    return;
+            //}
+            collider.convex = true;
         }
 
     }

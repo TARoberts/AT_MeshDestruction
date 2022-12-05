@@ -9,24 +9,31 @@ public class MeshSlice : MonoBehaviour
     private Vector3 edgeVertex = Vector3.zero;
     private Vector2 edgeUV = Vector2.zero;
     private Plane edgePlane = new Plane();
-    private Vector3 pos1, pos2;
+    private Vector3 pos1, pos2, pos3;
 
     public int CutCascades = 1;
+    public bool flip = false;
 
-    public float ExplodeForce = 1000;
+    public float ExplodeForce = 100;
     private Camera cam;
     private Plane testPlane;
     private string lastHit;
 
+    public float planeOffset = 3;
+    private float timer = 1f;
+    public GameObject orb;
+
     // Start is called before the first frame update
     void Start()
     {
+        orb = GameObject.FindGameObjectWithTag("orb");
         cam = Camera.main;
     }
 
     // Update is called once per frame
     void Update()
     {
+        flip = Follow.flip;
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
@@ -40,21 +47,58 @@ public class MeshSlice : MonoBehaviour
                     lastHit = hit.collider.name;
                 }
                 pos1 = hit.point;
+                SetPlane();
             }
             
         }
         if (Input.GetMouseButtonUp(0))
         {
             Debug.Log(lastHit);
-            pos2 = Input.mousePosition;
 
-            //float fuck = Vector3.Distance(pos1, pos2);
-            //testPlane = new Plane(pos1, fuck);
             if (lastHit == GetComponent<Collider>().name)
             {
                 DestroyMesh();
             }
         }
+
+        //if (Input.GetMouseButtonDown(1) && timer <= 0)
+        //{
+        //    timer = 1f;
+        //    flip = !flip;
+        //}
+        
+        //if (timer > 0f)
+        //{
+        //    timer -= Time.deltaTime;
+        //}
+    }
+
+    private void SetPlane()
+    {
+        pos2 = pos1;
+        pos2.z += planeOffset;
+
+        if (!flip)
+        {
+            pos2.y += planeOffset;
+        }
+        else
+        {
+            pos2.x += planeOffset;
+        }
+
+        pos3 = pos1;
+        //pos3.y -= planeOffset;
+        pos3.z += planeOffset;
+
+        GameObject orb1 = Instantiate(orb, pos1, transform.rotation);
+        orb1.AddComponent<TimerKill>();
+
+        GameObject orb2 = Instantiate(orb, pos2, transform.rotation);
+        orb2.AddComponent<TimerKill>();
+
+        GameObject orb3 = Instantiate(orb, pos3, transform.rotation);
+        orb3.AddComponent<TimerKill>();
     }
 
     private void DestroyMesh()
@@ -103,7 +147,7 @@ public class MeshSlice : MonoBehaviour
                 //Debug.Log(pos2);
                 //Plane plane = new Plane(pos1, pos2);
 
-                Plane plane = new Plane(UnityEngine.Random.onUnitSphere, pos1);
+                Plane plane = new Plane(pos1, pos2, pos3);
 
                 subParts.Add(GenerateMesh(parts[i], plane, true));
                 subParts.Add(GenerateMesh(parts[i], plane, false));
@@ -338,6 +382,7 @@ public class MeshSlice : MonoBehaviour
             MeshSlice meshSlice = OriginalModel.AddComponent<MeshSlice>();
             meshSlice.CutCascades = original.CutCascades;
             meshSlice.ExplodeForce = original.ExplodeForce;
+            meshSlice.flip = original.flip;
 
             //float size = collider.bounds.size.x + collider.bounds.size.y + collider.bounds.size.z;
             //if (size < 1)

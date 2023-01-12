@@ -8,12 +8,13 @@ public class Follow : MonoBehaviour
     public GameObject rotation1, rotation2;
     private float timer = 1f;
     private bool flipped;
+    public float offSet = 7.5f;
 
     void Update()
     {
         Vector3 pos = Input.mousePosition;
 
-        pos.z += 7.5f;
+        pos.z += offSet;
         transform.position = Camera.main.ScreenToWorldPoint(pos);
 
         if (Input.GetMouseButtonDown(1) && timer <= 0)

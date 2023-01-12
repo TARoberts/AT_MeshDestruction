@@ -14,7 +14,7 @@ public class MeshSlice : MonoBehaviour
     public int CutCascades = 1;
     public bool flip = false;
 
-    public float ExplodeForce = 100;
+    public float ExplodeForce = 400;
     private Camera cam;
     private Plane testPlane;
     private string lastHit;
@@ -146,6 +146,10 @@ public class MeshSlice : MonoBehaviour
                 //Debug.Log(pos1);
                 //Debug.Log(pos2);
                 //Plane plane = new Plane(pos1, pos2);
+
+                pos1 = transform.InverseTransformPoint(pos1);
+                pos2 = transform.InverseTransformPoint(pos2);
+                pos3 = transform.InverseTransformPoint(pos3);
 
                 Plane plane = new Plane(pos1, pos2, pos3);
 

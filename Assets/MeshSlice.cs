@@ -6,6 +6,7 @@ using UnityEngine;
 public class MeshSlice : MonoBehaviour
 {
     private bool edgeSet = false;
+    public bool isClone = false;
     private Vector3 edgeVertex = Vector3.zero;
     private Vector2 edgeUV = Vector2.zero;
     private Plane edgePlane = new Plane();
@@ -28,6 +29,46 @@ public class MeshSlice : MonoBehaviour
     {
         orb = GameObject.FindGameObjectWithTag("orb");
         cam = Camera.main;
+
+        if (isClone)
+        {
+            Mesh mesh = GetComponent<MeshFilter>().mesh;
+            Vector3[] vertices = mesh.vertices;
+            Vector2[] uvs = new Vector2[vertices.Length];
+            Vector3[] normals = mesh.normals;
+
+            //for (int i = 0; i < uvs.Length; i++)
+            //{
+            //    uvs[i] = new Vector2(vertices[i].x, vertices[i].z);
+            //}
+            //mesh.uv = uvs;
+
+
+            for (int i = 0; i < uvs.Length; i++)
+            {
+                if (Mathf.Abs(normals[i].y) > 0.5f)
+                {                      // if normal is like vector3.up
+                    uvs[i] = new Vector2(vertices[i].x, vertices[i].z);
+                }
+                else if (Mathf.Abs(normals[i].x) > 0.5f)
+                {             // if normal is like vector3.right
+                    uvs[i] = new Vector2(vertices[i].z, vertices[i].y);
+                }
+                else
+                {                                           // last case if it's like vector3.forward
+                    uvs[i] = new Vector2(vertices[i].x, vertices[i].y);
+                }
+            }
+
+            mesh.RecalculateNormals();
+            mesh.RecalculateBounds();
+            UnityEditor.Unwrapping.GenerateSecondaryUVSet(mesh);
+
+            
+            mesh.uv = mesh.uv2;
+
+            //mesh.uv = uvs;
+        }
     }
 
     // Update is called once per frame
@@ -58,19 +99,9 @@ public class MeshSlice : MonoBehaviour
             if (lastHit == GetComponent<Collider>().name)
             {
                 DestroyMesh();
+                
             }
         }
-
-        //if (Input.GetMouseButtonDown(1) && timer <= 0)
-        //{
-        //    timer = 1f;
-        //    flip = !flip;
-        //}
-        
-        //if (timer > 0f)
-        //{
-        //    timer -= Time.deltaTime;
-        //}
     }
 
     private void SetPlane()
@@ -128,25 +159,6 @@ public class MeshSlice : MonoBehaviour
                 Bounds bounds = parts[i].Bounds;
                 bounds.Expand(0.5f);
 
-
-                //Plane plane = new Plane(UnityEngine.Random.onUnitSphere, new Vector3(UnityEngine.Random.Range(bounds.min.x, bounds.max.x),
-                //                                                                   UnityEngine.Random.Range(bounds.min.y, bounds.max.y),
-                //                                                                   UnityEngine.Random.Range(bounds.min.z, bounds.max.z)));
-
-                //float fuck = Vector3.Distance(pos1, pos2);
-
-                //Plane plane = new Plane(pos1, new Vector3(UnityEngine.Random.Range(bounds.min.x, bounds.max.x),
-                //                                                                   UnityEngine.Random.Range(bounds.min.y, bounds.max.y),
-                //                                                                   UnityEngine.Random.Range(bounds.min.z, bounds.max.z)));
-
-                //pos2 = pos1 + bounds.max;
-
-                //pos1.Normalize();
-
-                //Debug.Log(pos1);
-                //Debug.Log(pos2);
-                //Plane plane = new Plane(pos1, pos2);
-
                 pos1 = transform.InverseTransformPoint(pos1);
                 pos2 = transform.InverseTransformPoint(pos2);
                 pos3 = transform.InverseTransformPoint(pos3);
@@ -163,6 +175,12 @@ public class MeshSlice : MonoBehaviour
         for (int i = 0; i < parts.Count; i++)
         {
             parts[i].MakeGameobject(this);
+
+            //UnityEditor.Unwrapping.GenerateSecondaryUVSet(parts[i].OriginalModel.GetComponent<MeshFilter>().mesh);
+            //parts[i].OriginalModel.GetComponent<MeshFilter>().mesh.RecalculateBounds();
+            //parts[i].OriginalModel.GetComponent<MeshFilter>().mesh.RecalculateNormals();
+            //parts[i].OriginalModel.GetComponent<MeshFilter>().mesh.RecalculateUVDistributionMetrics();
+            //parts[i].OriginalModel.GetComponent<MeshFilter>().mesh.SetUVs(0, parts[i].OriginalModel.GetComponent<MeshFilter>().mesh.uv2);
             parts[i].OriginalModel.GetComponent<Rigidbody>().AddForceAtPosition(parts[i].Bounds.center * ExplodeForce, transform.position);
         }
 
@@ -273,7 +291,6 @@ public class MeshSlice : MonoBehaviour
         }
 
         partMesh.FillArrays();
-
         return partMesh;
     }
 
@@ -379,6 +396,7 @@ public class MeshSlice : MonoBehaviour
 
             MeshFilter filter = OriginalModel.AddComponent<MeshFilter>();
             filter.mesh = mesh;
+            
 
             MeshCollider collider = OriginalModel.AddComponent<MeshCollider>();
 
@@ -387,13 +405,8 @@ public class MeshSlice : MonoBehaviour
             meshSlice.CutCascades = original.CutCascades;
             meshSlice.ExplodeForce = original.ExplodeForce;
             meshSlice.flip = original.flip;
+            meshSlice.isClone = true;
 
-            //float size = collider.bounds.size.x + collider.bounds.size.y + collider.bounds.size.z;
-            //if (size < 1)
-            //{
-            //    Debug.Log("Culling Object of size " + size);
-            //    return;
-            //}
             collider.convex = true;
         }
 
